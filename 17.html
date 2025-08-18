@@ -1,0 +1,18 @@
+<html lang="en">
+<head>    
+</head>
+<body>
+    <input id="myInput" type="text" value="Default">
+    <input type="submit" value="Submit" onclick="a()">
+    <br> 
+    <input type="checkbox" id="myCheckbox" value="Check me!">
+    <input type="submit" value="Submit" id="submit">
+<script>
+    function a(){
+        let inputValue=document.getElementById("myInput").value;
+        alert(inputValue)
+        document.getElementById("myInput").value="Changed!";
+    }
+</script>
+</body>
+</html>
