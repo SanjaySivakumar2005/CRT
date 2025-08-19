@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 800px;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        #drag-item {
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+            border-radius: 8px;
+        }
+        
+        #drop-target {
+            width: 200px;
+            height: 200px;
+            border: 3px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        #drop-target.highlight {
+            background-color: #f0f0f0;
+            border-color: #4CAF50;
+        }
+        
+        #event-log {
+            width: 100%;
+            max-width: 800px;
+            height: 200px;
+            border: 1px solid #ddd;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 3px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drag and Drop Example</h1>
+    
+    <div class="container">
+        <div id="drag-item" draggable="true">Drag Me</div>
+        <div id="drop-target">Drop Here</div>
+    </div>
+    
+    <h2>Event Log</h2>
+    <div id="event-log"></div>
+    
+    <script>
+        const dragItem = document.getElementById('drag-item');
+        const dropTarget = document.getElementById('drop-target');
+        const eventLog = document.getElementById('event-log');
+        
+        // Helper function to log events
+        function logEvent(event) {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.textContent = `${new Date().toLocaleTimeString()}: ${event.type}`;
+            eventLog.appendChild(logEntry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+        
+        // Drag source events
+        dragItem.addEventListener('dragstart', (e) => {
+            logEvent(e);
+            e.dataTransfer.setData('text/plain', dragItem.id);
+            e.target.style.opacity = '0.4';
+        });
+        
+        // dragItem.addEventListener('drag', (e) => {
+        //     // This fires continuously while dragging
+        //     // We're not logging this to avoid flooding the log
+        // });
+        
+        dragItem.addEventListener('dragend', (e) => {
+            logEvent(e);
+            e.target.style.opacity = '1';
+        });
+        
+        // Drop target events
+        dropTarget.addEventListener('dragenter', (e) => {
+            logEvent(e);
+            e.preventDefault();
+            e.target.classList.add('highlight');
+        });
+        
+        dropTarget.addEventListener('dragleave', (e) => {
+            logEvent(e);
+            e.target.classList.remove('highlight');
+        });
+        
+        dropTarget.addEventListener('dragover', (e) => {
+            // Must prevent default to allow drop
+            e.  preventDefault();
+        });
+        
+        dropTarget.addEventListener('drop', (e) => {
+            logEvent(e);
+            e.preventDefault();
+            e.target.classList.remove('highlight');
+            
+            const data = e.dataTransfer.getData('text/plain');
+            const draggedElement = document.getElementById(data);
+            
+            e.target.appendChild(draggedElement);
+            e.target.style.borderStyle = 'solid';
+            e.target.textContent = '';
+        });
+    </script>
+</body>
+</html>
